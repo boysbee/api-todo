@@ -37,6 +37,40 @@ info:
 
 ---
 spring:
+  profiles: production
+
+spring.jpa:
+    hibernate.ddl-auto: none
+
+logging:
+  file: logs/api/todo.log
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: ERROR
+    com.exam.todo.api.rest: INFO
+    org.hibernate: WARN
+
+---
+spring:
+  profiles: default
+
+spring.jpa:
+    hibernate.ddl-auto: create-drop
+
+logging:
+  file: logs/api/todo.log
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: INFO
+    com.exam.todo.api.rest: INFO
+    org.hibernate: WARN
+
+---
+spring:
   profiles: test
 
 spring.jpa:

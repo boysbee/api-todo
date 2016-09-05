@@ -1,8 +1,5 @@
 package com.exam.todo;
 
-import com.mangofactory.swagger.plugin.EnableSwagger;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -20,14 +17,12 @@ import static springfox.documentation.builders.PathSelectors.regex;
 /**
  * Created by boysbee on 9/5/2016 AD.
  */
-@EnableAutoConfiguration  // Sprint Boot Auto Configuration
+@EnableAutoConfiguration
 @ComponentScan(basePackages = "com.exam.todo")
-@EnableJpaRepositories("com.exam.todo.dao.jpa") // To segregate MongoDB and JPA repositories. Otherwise not needed.
+@EnableJpaRepositories("com.exam.todo.dao.jpa")
 @EnableSwagger2
 public class Application {
     private static final Class<Application> applicationClass = Application.class;
-    private static final Logger log = LoggerFactory.getLogger(applicationClass);
-
     public static void main(String[] args) {
         SpringApplication.run(applicationClass, args);
     }
