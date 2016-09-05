@@ -58,15 +58,24 @@ public class TaskServiceTest {
 
     @Test
     public void deleteTask() {
-        Task delete = taskRepository.save(new Task("taskDelete","pending"));
+        Task delete = taskRepository.save(new Task("taskDelete", "pending"));
         taskService.deleteTask(delete.getId());
         Task actual = taskRepository.findOne(delete.getId());
         assertNull(actual);
     }
 
     @Test
-    public void createTask(){
-        assertNotNull(taskService.createTask(new Task("taskCreate","done")));
+    public void createTask() {
+        assertNotNull(taskService.createTask(new Task("taskCreate", "done")));
     }
 
+
+    @Test
+    public void updateTask() {
+        Task taskUpdate = taskService.createTask(new Task("update_task", "pending"));
+        Task updatedTask = new Task(taskUpdate.getId(),"updated_task","done");
+        taskService.updateTask(updatedTask);
+        Task actual = taskService.getTask(taskUpdate.getId());
+        assertEquals("done",actual.getStatus());
+    }
 }

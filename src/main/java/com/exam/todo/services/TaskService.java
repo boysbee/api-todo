@@ -45,4 +45,8 @@ public class TaskService {
     public Task createTask(final Task task) {
         return taskRepository.save(task);
     }
+
+    public void updateTask(final Task task) {
+        this.taskRepository.save(task);
+    }
 }
