@@ -54,7 +54,7 @@ logging:
 
 ---
 spring:
-  profiles: default
+  profiles: dev
 
 spring.jpa:
     hibernate.ddl-auto: create-drop
