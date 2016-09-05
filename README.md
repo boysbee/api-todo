@@ -4,6 +4,10 @@ This is simple RESTful API service design and implement a deployable RESTful API
 ### Preparation
 - JDK 1.8
 - Apache Maven 3.3.0+
+- MySql
+
+### Create Database and Table
+You can use `src/main/setup/persistence.sql` to create database `todo` and table `task`.
 
 ### Build and Run
 You can use profile to run `production`, `dev`, `test` with paramter `-Dspring.profiles.active=<profile>`
