@@ -151,6 +151,13 @@ public class TodoControllerTest {
     }
 
 
+    @Test
+    public void notFound() throws Exception {
+        mvc.perform(get("todo/api/tasks/" + 9))
+                .andExpect(status().isNotFound());
+
+    }
+
     private long getResourceIdFromUrl(String locationUrl) {
         String[] parts = locationUrl.split("/");
         return Long.valueOf(parts[parts.length - 1]);
