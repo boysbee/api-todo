@@ -1,14 +1,15 @@
 #TODO API
+This is simple RESTful API service design and implement a deployable RESTful API backend that stores the resource for a simple `todo` tasklist.
 
-## Build
+
+## Build WAR and Run
 `mvn clean package`
 
-## Run with Spring Boot
-`mvn spring-boot:run`
+Or
 
-## Run with JAR
-`java -jar target/api-todo-<version>.jar`
+`mvn clean package spring-boot:run`
 
 ## API Document
 `http://localhost:8090/swagger-ui.html`
+
 `http://localhost:8090/v2/api-docs`
