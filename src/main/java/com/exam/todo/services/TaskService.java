@@ -41,4 +41,8 @@ public class TaskService {
     public void deleteTask(final Long id) {
         this.taskRepository.delete(id);
     }
+
+    public Task createTask(final Task task) {
+        return taskRepository.save(task);
+    }
 }

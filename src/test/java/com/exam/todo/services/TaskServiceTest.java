@@ -52,16 +52,21 @@ public class TaskServiceTest {
 
     @Test
     public void getSingleTask() {
-        Task actual = taskRepository.findOne(2l);
+        Task actual = taskService.getTask(2l);
         assertEquals(2, actual.getId());
     }
 
     @Test
     public void deleteTask() {
         Task delete = taskRepository.save(new Task("taskDelete","pending"));
-        taskRepository.delete(delete.getId());
+        taskService.deleteTask(delete.getId());
         Task actual = taskRepository.findOne(delete.getId());
         assertNull(actual);
+    }
+
+    @Test
+    public void createTask(){
+        assertNotNull(taskService.createTask(new Task("taskCreate","done")));
     }
 
 }
