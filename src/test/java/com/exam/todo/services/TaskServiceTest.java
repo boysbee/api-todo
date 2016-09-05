@@ -76,6 +76,7 @@ public class TaskServiceTest {
         Task updatedTask = new Task(taskUpdate.getId(),"updated_task","done");
         taskService.updateTask(updatedTask);
         Task actual = taskService.getTask(taskUpdate.getId());
+
         assertEquals("done",actual.getStatus());
     }
 }
