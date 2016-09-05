@@ -35,11 +35,19 @@ info:
     description: ${project.description}
     version: ${project.version}
 
-hotel.service:
-  name: 'default profile:'
 ---
 spring:
   profiles: test
 
 spring.jpa:
     hibernate.ddl-auto: create-drop
+
+logging:
+  file: logs/api/todo.log
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    org.springframework.web: INFO
+    com.exam.todo.api.rest: INFO
+    org.hibernate: INFO
