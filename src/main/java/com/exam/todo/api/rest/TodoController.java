@@ -6,6 +6,8 @@ import com.exam.todo.services.TaskService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import com.wordnik.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,8 @@ public class TodoController extends AbstractRestHandler {
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Create a task resource.", notes = "Returns the URL of the new resource in the Location header.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created")})
     public void createTask(@RequestBody Task task,
                            HttpServletRequest request, HttpServletResponse response) {
         Task createTask = this.taskService.createTask(task);
@@ -42,6 +46,8 @@ public class TodoController extends AbstractRestHandler {
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Update a task resource.", notes = "You have to provide a valid task ID in the URL and in the payload. The ID attribute can not be updated.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "No Content")})
     public void updateTask(@ApiParam(value = "The ID of the existing task resource.", required = true)
                            @PathVariable("id") Long id, @RequestBody Task task,
                            HttpServletRequest request, HttpServletResponse response) {
@@ -55,6 +61,8 @@ public class TodoController extends AbstractRestHandler {
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get a paginated list of all tasks.", notes = "The list is paginated. You can provide a page number (default 0) and a page size (default 100)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")})
     public
     @ResponseBody
     Page<Task> getAllTasks(@ApiParam(value = "The page number (zero-based)", required = true)
@@ -70,6 +78,8 @@ public class TodoController extends AbstractRestHandler {
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation(value = "Get a single task.", notes = "You have to provide a valid task ID.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success")})
     public
     @ResponseBody
     Task getTask(@ApiParam(value = "The ID of the task.", required = true)
@@ -85,6 +95,8 @@ public class TodoController extends AbstractRestHandler {
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a task resource.", notes = "You have to provide a valid task ID in the URL. Once deleted the resource can not be recovered.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "No Content")})
     public void deleteTask(@ApiParam(value = "The ID of the existing task resource.", required = true)
                            @PathVariable("id") Long id, HttpServletRequest request,
                            HttpServletResponse response) {
