@@ -1,6 +1,7 @@
 package com.exam.todo.api.rest;
 
 import com.exam.todo.domain.Task;
+import com.exam.todo.exception.DataFormatException;
 import com.exam.todo.services.TaskService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -28,11 +29,25 @@ public class TodoController extends AbstractRestHandler {
             consumes = {"application/json", "application/xml"},
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiOperation(value = "Create a hotel resource.", notes = "Returns the URL of the new resource in the Location header.")
+    @ApiOperation(value = "Create a task resource.", notes = "Returns the URL of the new resource in the Location header.")
     public void createTask(@RequestBody Task task,
                            HttpServletRequest request, HttpServletResponse response) {
         Task createTask = this.taskService.createTask(task);
-        response.setHeader("Location", request.getRequestURL().append("/").append(task.getId()).toString());
+        response.setHeader("Location", request.getRequestURL().append("/").append(createTask.getId()).toString());
+    }
+
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.PUT,
+            consumes = {"application/json", "application/xml"},
+            produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Update a task resource.", notes = "You have to provide a valid task ID in the URL and in the payload. The ID attribute can not be updated.")
+    public void updateTask(@ApiParam(value = "The ID of the existing task resource.", required = true)
+                           @PathVariable("id") Long id, @RequestBody Task task,
+                           HttpServletRequest request, HttpServletResponse response) {
+        checkResourceFound(this.taskService.getTask(id));
+        if (id != task.getId()) throw new DataFormatException("ID doesn't match!");
+        this.taskService.updateTask(task);
     }
 
     @RequestMapping(value = "",

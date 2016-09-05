@@ -27,9 +27,7 @@ import java.util.regex.Pattern;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -107,7 +105,6 @@ public class TodoControllerTest {
     public void createTask() throws Exception {
         Task task = mockTask("sample_", "done");
         byte[] json = toJson(task);
-        //CREATE
         MvcResult result = mvc.perform(post("/todo/api/tasks")
                 .content(json)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -117,12 +114,40 @@ public class TodoControllerTest {
                 .andReturn();
         long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
 
-        //RETRIEVE
         mvc.perform(get("/todo/api/tasks/" + id)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is((int) id)))
                 .andExpect(jsonPath("$.description", containsString("sample_")));
+    }
+
+    @Test
+    public void updateTask() throws Exception {
+        Task task = mockTask("create_", "pending");
+        byte[] json = toJson(task);
+        MvcResult result = mvc.perform(post("/todo/api/tasks")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrlPattern(RESOURCE_LOCATION_PATTERN))
+                .andReturn();
+        long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
+
+        Task updateData = new Task(id, "updated", "done");
+        byte[] jsonUpdateData = toJson(updateData);
+        mvc.perform(put("/todo/api/tasks/" + id)
+                .content(jsonUpdateData)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        mvc.perform(get("/todo/api/tasks/" + id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is((int) id)))
+                .andExpect(jsonPath("$.description", containsString("update")))
+                .andExpect(jsonPath("$.status", is("done")));
     }
 
 
@@ -133,14 +158,14 @@ public class TodoControllerTest {
 
 
     private Task mockTask(String prefix, final String status) {
-        Task r = new Task(prefix.concat("task"), "done");
+        Task task = new Task(prefix.concat("task"), "done");
 
-        return r;
+        return task;
     }
 
     private byte[] toJson(Object r) throws Exception {
-        ObjectMapper map = new ObjectMapper();
-        return map.writeValueAsString(r).getBytes();
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(r).getBytes();
     }
 
     // match redirect header URL (aka Location header)
