@@ -24,6 +24,18 @@ public class TodoController extends AbstractRestHandler {
     private TaskService taskService;
 
     @RequestMapping(value = "",
+            method = RequestMethod.POST,
+            consumes = {"application/json", "application/xml"},
+            produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Create a hotel resource.", notes = "Returns the URL of the new resource in the Location header.")
+    public void createTask(@RequestBody Task task,
+                           HttpServletRequest request, HttpServletResponse response) {
+        Task createTask = this.taskService.createTask(task);
+        response.setHeader("Location", request.getRequestURL().append("/").append(task.getId()).toString());
+    }
+
+    @RequestMapping(value = "",
             method = RequestMethod.GET,
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.OK)
@@ -59,8 +71,8 @@ public class TodoController extends AbstractRestHandler {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Delete a task resource.", notes = "You have to provide a valid task ID in the URL. Once deleted the resource can not be recovered.")
     public void deleteTask(@ApiParam(value = "The ID of the existing task resource.", required = true)
-                            @PathVariable("id") Long id, HttpServletRequest request,
-                            HttpServletResponse response) {
+                           @PathVariable("id") Long id, HttpServletRequest request,
+                           HttpServletResponse response) {
         checkResourceFound(this.taskService.getTask(id));
         this.taskService.deleteTask(id);
     }
