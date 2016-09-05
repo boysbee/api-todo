@@ -29,6 +29,8 @@ Build `war` file to deploy web application.
 mvn clean package -DskipTests
 ```
 
+The `war` just in folder `target/api-todo-<version>.war` you can use this file to deploy in apache tomcat.
+
 ### Using
 
 You can see what urls are available using curl:
