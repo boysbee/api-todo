@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by boysbee on 9/5/2016 AD.
@@ -34,8 +35,8 @@ public class TaskServiceTest {
 
     @Before
     public void setUp() {
-        Task task1 = taskRepository.save(new Task(1,"task1", "done"));
-        Task task2 = taskRepository.save(new Task(2,"task2", "done"));
+        Task task1 = taskRepository.save(new Task("task1", "done"));
+        Task task2 = taskRepository.save(new Task("task2", "done"));
     }
 
     @After
@@ -53,6 +54,14 @@ public class TaskServiceTest {
     public void getSingleTask() {
         Task actual = taskRepository.findOne(2l);
         assertEquals(2, actual.getId());
+    }
+
+    @Test
+    public void deleteTask() {
+        Task delete = taskRepository.save(new Task("taskDelete","pending"));
+        taskRepository.delete(delete.getId());
+        Task actual = taskRepository.findOne(delete.getId());
+        assertNull(actual);
     }
 
 }
