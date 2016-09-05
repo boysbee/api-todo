@@ -56,7 +56,7 @@ public class TodoController extends AbstractRestHandler {
         this.taskService.updateTask(task);
     }
 
-    @RequestMapping(value = "/{id}/setStatus/{status}",
+    @RequestMapping(value = "/{id}/setStatus",
             method = RequestMethod.PUT,
             consumes = {"application/json", "application/xml"},
             produces = {"application/json", "application/xml"})
@@ -67,7 +67,7 @@ public class TodoController extends AbstractRestHandler {
     public void updateTaskStatus(@ApiParam(value = "The ID of the existing task resource.", required = true)
                                  @PathVariable("id") Long id,
                                  @ApiParam(value = "The status to change existing task resource.", required = true)
-                                 @PathVariable("status") String status) {
+                                 @RequestBody String status) {
         Task updateTask = checkResourceFound(this.taskService.getTask(id));
         this.taskService.updateTask(new Task(updateTask.getId(), updateTask.getDescription(), status));
     }

@@ -162,7 +162,8 @@ public class TodoControllerTest {
         long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
 
 
-        mvc.perform(put("/todo/api/tasks/" + id + "/setStatus/success")
+        mvc.perform(put("/todo/api/tasks/" + id + "/setStatus")
+                .content("success".getBytes())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
