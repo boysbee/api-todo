@@ -61,11 +61,11 @@ public class TodoControllerTest {
     public void initTests() {
         MockitoAnnotations.initMocks(this);
         mvc = MockMvcBuilders.webAppContextSetup(context).build();
+        taskRepository.save(new Task("task1", "done"));
     }
 
     @Test
     public void getAllTasks() throws Exception {
-        taskRepository.save(new Task("task1", "done"));
         //RETRIEVE
         mvc.perform(get("/todo/api/tasks")
                 .accept(MediaType.APPLICATION_JSON))
@@ -73,6 +73,19 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.content[0].id", is(1)))
                 .andExpect(jsonPath("$.content[0].description", is("task1")))
                 .andExpect(jsonPath("$.content[0].status", is("done")));
+
+    }
+
+    @Test
+    public void getOneTask() throws Exception {
+        taskRepository.save(new Task("task1", "done"));
+        //RETRIEVE
+        mvc.perform(get("/todo/api/tasks/" + 1)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.description", is("task1")))
+                .andExpect(jsonPath("$.status", is("done")));
 
     }
 

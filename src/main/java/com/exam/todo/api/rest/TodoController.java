@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
  * Created by boysbee on 9/5/2016 AD.
  */
 @RestController
-@RequestMapping(value = "/todo/api")
+@RequestMapping(value = "/todo/api/tasks")
 @Api(value = "todos", description = "TODO API")
 public class TodoController extends AbstractRestHandler {
     @Autowired
     private TaskService taskService;
-    @RequestMapping(value = "/tasks",
+    @RequestMapping(value = "",
             method = RequestMethod.GET,
             produces = {"application/json", "application/xml"})
     @ResponseStatus(HttpStatus.OK)
@@ -35,5 +35,20 @@ public class TodoController extends AbstractRestHandler {
                             @RequestParam(value = "size", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer size,
                            HttpServletRequest request, HttpServletResponse response) {
         return this.taskService.getAllTask(page, size);
+    }
+
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.GET,
+            produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Get a single task.", notes = "You have to provide a valid task ID.")
+    public
+    @ResponseBody
+    Task getTask(@ApiParam(value = "The ID of the task.", required = true)
+                   @PathVariable("id") Long id,
+                   HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Task task = this.taskService.getTask(id);
+        checkResourceFound(task);
+        return task;
     }
 }
