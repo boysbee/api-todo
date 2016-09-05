@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableSwagger
 @ComponentScan("com.exam.todo.api.rest")
 public class SwaggerConfig {
-    public static final String DEFAULT_INCLUDE_PATTERNS = "/exam/.*";
+    public static final String DEFAULT_INCLUDE_PATTERNS = "/todo/api/tasks.*";
 
     private SpringSwaggerConfig springSwaggerConfig;
 

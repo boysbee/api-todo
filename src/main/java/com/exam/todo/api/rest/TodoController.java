@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @RestController
 @RequestMapping(value = "/todo/api/tasks")
-@Api(value = "todos", description = "TODO API")
+@Api(basePath = "/todo/api/tasks", value = "todo", description = "TODO API")
 public class TodoController extends AbstractRestHandler {
     @Autowired
     private TaskService taskService;
