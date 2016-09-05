@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 public class TodoController extends AbstractRestHandler {
     @Autowired
     private TaskService taskService;
+
     @RequestMapping(value = "",
             method = RequestMethod.GET,
             produces = {"application/json", "application/xml"})
@@ -30,9 +31,9 @@ public class TodoController extends AbstractRestHandler {
     public
     @ResponseBody
     Page<Task> getAllTasks(@ApiParam(value = "The page number (zero-based)", required = true)
-                            @RequestParam(value = "page", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer page,
+                           @RequestParam(value = "page", required = true, defaultValue = DEFAULT_PAGE_NUM) Integer page,
                            @ApiParam(value = "Tha page size", required = true)
-                            @RequestParam(value = "size", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer size,
+                           @RequestParam(value = "size", required = true, defaultValue = DEFAULT_PAGE_SIZE) Integer size,
                            HttpServletRequest request, HttpServletResponse response) {
         return this.taskService.getAllTask(page, size);
     }
@@ -45,10 +46,22 @@ public class TodoController extends AbstractRestHandler {
     public
     @ResponseBody
     Task getTask(@ApiParam(value = "The ID of the task.", required = true)
-                   @PathVariable("id") Long id,
-                   HttpServletRequest request, HttpServletResponse response) throws Exception {
+                 @PathVariable("id") Long id,
+                 HttpServletRequest request, HttpServletResponse response) throws Exception {
         Task task = this.taskService.getTask(id);
         checkResourceFound(task);
         return task;
+    }
+
+    @RequestMapping(value = "/{id}",
+            method = RequestMethod.DELETE,
+            produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Delete a task resource.", notes = "You have to provide a valid task ID in the URL. Once deleted the resource can not be recovered.")
+    public void deleteTask(@ApiParam(value = "The ID of the existing task resource.", required = true)
+                            @PathVariable("id") Long id, HttpServletRequest request,
+                            HttpServletResponse response) {
+        checkResourceFound(this.taskService.getTask(id));
+        this.taskService.deleteTask(id);
     }
 }

@@ -3,15 +3,7 @@ package com.exam.todo.api.rest;
 import com.exam.todo.Application;
 import com.exam.todo.dao.jpa.TaskRepository;
 import com.exam.todo.domain.Task;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static org.junit.Assert.*;
-
-/**
- * Created by boysbee on 9/5/2016 AD.
- */
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,21 +16,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Random;
-import java.util.regex.Pattern;
-
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/**
+ * Created by boysbee on 9/5/2016 AD.
+ */
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -63,10 +52,15 @@ public class TodoControllerTest {
         mvc = MockMvcBuilders.webAppContextSetup(context).build();
         taskRepository.save(new Task("task1", "done"));
     }
+@After
+public void tearDown(){
+    mvc = null;
+    taskRepository = null;
+    controller = null;
+}
 
     @Test
     public void getAllTasks() throws Exception {
-        //RETRIEVE
         mvc.perform(get("/todo/api/tasks")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -78,14 +72,21 @@ public class TodoControllerTest {
 
     @Test
     public void getOneTask() throws Exception {
-        taskRepository.save(new Task("task1", "done"));
-        //RETRIEVE
         mvc.perform(get("/todo/api/tasks/" + 1)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.description", is("task1")))
                 .andExpect(jsonPath("$.status", is("done")));
+
+    }
+
+    @Test
+    public void deleteTask() throws Exception {
+        taskRepository.save(new Task("task1", "done"));
+        mvc.perform(delete("/todo/api/tasks/" + 1)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
 
     }
 
