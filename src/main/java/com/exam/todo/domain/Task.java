@@ -11,19 +11,22 @@ import java.io.Serializable;
 public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private final long id;
+    private long id;
 
     private final String description;
 
     private final String status;
 
+    public Task() {
+        this.description = "";
+        this.status = "pending";
+    }
 
-    public Task(final long id,final String description, final String status){
-        this.id = id;
+
+    public Task(final String description, final String status) {
         this.description = description;
         this.status = status;
     }
-
 
     public long getId() {
         return id;
