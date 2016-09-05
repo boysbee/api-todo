@@ -148,6 +148,31 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.id", is((int) id)))
                 .andExpect(jsonPath("$.description", containsString("update")))
                 .andExpect(jsonPath("$.status", is("done")));
+    }@Test
+    public void updateTaskStatus() throws Exception {
+        Task task = mockTask("create_", "pending");
+        byte[] json = toJson(task);
+        MvcResult result = mvc.perform(post("/todo/api/tasks")
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrlPattern(RESOURCE_LOCATION_PATTERN))
+                .andReturn();
+        long id = getResourceIdFromUrl(result.getResponse().getRedirectedUrl());
+
+
+        mvc.perform(put("/todo/api/tasks/" + id + "/setStatus/success")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        mvc.perform(get("/todo/api/tasks/" + id)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is((int) id)))
+                .andExpect(jsonPath("$.description", containsString("create_")))
+                .andExpect(jsonPath("$.status", is("success")));
     }
 
 

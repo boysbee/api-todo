@@ -56,6 +56,22 @@ public class TodoController extends AbstractRestHandler {
         this.taskService.updateTask(task);
     }
 
+    @RequestMapping(value = "/{id}/setStatus/{status}",
+            method = RequestMethod.PUT,
+            consumes = {"application/json", "application/xml"},
+            produces = {"application/json", "application/xml"})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Update a task status.", notes = "You have to provide a valid task ID in the URL and in the payload. The ID attribute can not be updated.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "No Content")})
+    public void updateTaskStatus(@ApiParam(value = "The ID of the existing task resource.", required = true)
+                                 @PathVariable("id") Long id,
+                                 @ApiParam(value = "The status to change existing task resource.", required = true)
+                                 @PathVariable("status") String status) {
+        Task updateTask = checkResourceFound(this.taskService.getTask(id));
+        this.taskService.updateTask(new Task(updateTask.getId(), updateTask.getDescription(), status));
+    }
+
     @RequestMapping(value = "",
             method = RequestMethod.GET,
             produces = {"application/json", "application/xml"})
